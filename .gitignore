@@ -1,0 +1,17 @@
+# Local deploy config (host/user/email) — never commit
+.deploy.env
+
+# Keys & certs — never commit
+*.pem
+*.key
+id_*
+!*.pub
+
+# Env / secrets
+.env
+.env.*
+!.deploy.env.example
+
+# OS / editor cruft
+.DS_Store
+*.swp

@@ -1,0 +1,8 @@
+// Installed to /etc/apt/apt.conf.d/52unattended-upgrades-reboot
+//
+// Enables automatic reboot after security upgrades that need one (e.g. kernel).
+// Kept in a separate 52- file (loads AFTER the stock 50unattended-upgrades, so
+// these keys win) rather than editing 50unattended-upgrades in place — that keeps
+// the change reproducible and survives package updates to the stock file.
+Unattended-Upgrade::Automatic-Reboot "true";
+Unattended-Upgrade::Automatic-Reboot-Time "04:00";

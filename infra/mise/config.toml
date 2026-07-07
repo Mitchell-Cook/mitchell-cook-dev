@@ -1,0 +1,12 @@
+# Installed to ~/.config/mise/config.toml for the primary user.
+#
+# Floating versions (a deliberate choice for a dev box — always latest). If exact
+# rebuild reproducibility ever matters more, pin majors, e.g. python = "3.14".
+# Java is pinned to an LTS Temurin build because `latest` can resolve to non-LTS.
+[tools]
+node = "lts"
+python = "latest"
+go = "latest"
+rust = "latest"
+java = "temurin-21"
+ruby = "latest"
