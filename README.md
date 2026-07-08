@@ -18,7 +18,4 @@ Push to `main` runs the safe `apply.sh` on the droplet via GitHub Actions. Nothi
 secret lives in this repo — host, user, email, and keys come from GitHub Secrets or an
 untracked `.deploy.env`.
 
-## Docs
-
-- [Deploying](docs/deploying.md) — push-to-deploy, deploy from your Mac, CI secrets
-- [Provisioning](docs/provisioning.md) — standing up a fresh droplet from scratch
+See [`docs/`](docs/) for deploy, provisioning, and design-system guides.

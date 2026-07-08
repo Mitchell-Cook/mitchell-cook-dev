@@ -38,7 +38,9 @@ domain, edit-here-and-it-goes-live.
 
 ## Reference docs (read when relevant)
 
+- `docs/design-system.md` — the design system / style guide: tokens, layout, color, type,
+  components, HTML conventions, accessibility. The spec `site/styles.css` implements.
 - `docs/deploying.md` — push-to-deploy, deploy from Mac, CI secrets, why no secrets live here
 - `docs/provisioning.md` — standing up a fresh droplet with `provision.sh` (rare, sensitive)
 
-Read these when doing deploy/infra work rather than duplicating them here.
+Read these when doing design or deploy/infra work rather than duplicating them here.
