@@ -8,9 +8,9 @@ The goal: every page on the site looks like it belongs to the same site — same
 colors, same spacing, same buttons — without anyone having to think about it. One shared
 CSS file, a small vocabulary of tokens and components, reused everywhere.
 
-> **Status:** v1 — direction settled. The core decisions (color, theme, fonts, layout,
-> naming, and what to build first) are locked in [Settled decisions](#settled-decisions).
-> A few `_(proposed)_` items are deliberately deferred until a page needs them.
+> **Status:** v1 — settled and built. Every decision (color, theme, fonts, layout, naming,
+> components) is made and implemented in `site/styles.css`; they're listed in
+> [Settled decisions](#settled-decisions). There are no open questions.
 
 ## Philosophy
 
@@ -47,7 +47,7 @@ The rules that settle future arguments so we don't re-litigate them per page:
 Every page follows the same skeleton:
 
 ```
-<header>   — page/site title, tagline, and (later) nav
+<header>   — site nav, page/site title, tagline
 <main>     — the content, inside a constrained reading column
 <footer>   — copyright + links
 ```
@@ -98,13 +98,12 @@ correct markup is what makes the [accessibility](#accessibility) guarantees actu
   margins grow instead — no desktop-specific layout needed for prose.
 - **Fluid type** for large display text via `clamp()` (the hero already does this), so
   headings scale smoothly without breakpoint jumps.
-- **Breakpoints are rare and intentional.** We add one only when a component genuinely needs
-  to reflow (e.g. a nav collapsing). No grid of arbitrary device widths.
-- **First breakpoint in use:** `40rem`, where the `.cards` grid goes from one column to two.
-  It's a raw value in the media query (custom properties can't be used inside `@media`), so
-  there's no `--bp-sm` token — the number lives at the single call site that needs it.
-- _(proposed)_ Named breakpoints if a second call site ever wants the same number:
-  `--bp-md: 60rem`. Introduce lazily, not up front.
+- **Breakpoints are rare and intentional.** Add one only when a component genuinely needs to
+  reflow. No grid of arbitrary device widths, and no named `--bp-*` tokens — the number lives
+  as a raw value at the single call site that uses it (custom properties can't be used inside
+  `@media` anyway).
+- **The one breakpoint we have:** `40rem`, where the `.cards` grid goes from one column to
+  two. That's the whole list until a component earns another.
 
 ## Color
 
@@ -124,8 +123,7 @@ light/dark swap is just a second set of token values.
 | `--border` | `rgba(0,0,0,0.12)` | `rgba(255,255,255,0.14)` | Hairline dividers |
 
 Near-black/near-white rather than pure `#000`/`#fff` — softer on the eyes and avoids harsh
-contrast, while still reading as "black and white." (If you'd rather go pure, it's a
-two-value edit.)
+contrast, while still reading as "black and white."
 
 Implementation: defaults in `:root`, dark overrides in
 `@media (prefers-color-scheme: dark)`.
@@ -138,12 +136,15 @@ Rules:
   Typography).
 - **Contrast matters.** Body text must clear WCAG AA (4.5:1) in both themes. Muted text is
   for non-essential copy only.
-- _(proposed)_ If a component ever truly needs a status color (e.g. form validation), add a
-  single semantic token then — not before. Even then, prefer text/icons over color alone.
+- **Status is monochrome too.** Errors, validation, and other states are carried by text,
+  weight, and icons — never a color. Form errors use bold text, not red (the form component
+  already does this). One exception is allowed: if a form's validation genuinely can't be
+  made clear without color, a single semantic status token may be added — one token, and
+  color is still never the only signal.
 
 ## Typography
 
-- **Font stack** _(settled)_: native system UI stack only
+- **Font stack:** native system UI stack only
   (`-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, …`) — no web fonts. Zero network
   cost, no layout shift, looks at home on every OS, ages perfectly. Each visitor sees their
   own system's default UI font, which is the point.
@@ -264,17 +265,14 @@ Baseline commitments:
 Rule of thumb: tab through every page, check contrast in both themes, and try a screen reader
 now and then. If a component can't be built accessibly, it doesn't go in the system.
 
-## Open decisions
-
-None outstanding. The one remaining knob is cosmetic and easy to flip later:
-
-- **Pure vs. near black/white?** The doc specifies near-black/near-white (`#0a0a0a` /
-  `#f2f2f2`) for eye comfort. Switch to pure `#000`/`#fff` any time if you want maximum
-  contrast — it's a two-value edit.
-
 ## Settled decisions
 
 - **Color:** monochrome, no accent, no gradient. Foreground + background only. _(2026-07-08)_
+- **Black/white depth:** near-black/near-white (`#0a0a0a` / `#f2f2f2`), not pure `#000`/`#fff`
+  — softer on the eyes while still reading as black and white. _(2026-07-08)_
+- **Status color:** none. States are carried by text, weight, and icons; one semantic status
+  token is allowed only if a form's validation truly can't be made clear without it, and even
+  then color is never the sole signal. _(2026-07-08)_
 - **Theme:** auto light/dark via `prefers-color-scheme` — no toggle, no JS. _(2026-07-08)_
 - **Links:** monochrome, underline-based emphasis (no colored links). _(2026-07-08)_
 - **Fonts:** system stack only — system UI font for text, system monospace for code, no web
@@ -283,5 +281,7 @@ None outstanding. The one remaining knob is cosmetic and easy to flip later:
   layout, tag/badge, and code block — all built. _(2026-07-08)_
 - **Wide content:** narrow prose column by default; opt-in `--wide` variant capped at
   `--measure-wide` for demos/media. _(2026-07-08)_
+- **Breakpoints:** raw values at the call site, no `--bp-*` tokens. One breakpoint exists
+  (`40rem`, the cards grid); add another only when a component must reflow. _(2026-07-08)_
 - **Class naming:** BEM (`block__element--modifier`), with short utility classes for
   one-offs. _(2026-07-08)_
