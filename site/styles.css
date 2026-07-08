@@ -1,14 +1,57 @@
+/* ==========================================================================
+   mitchellcook.dev — implements docs/design-system.md
+   Monochrome, system-font, auto light/dark. Tokens → base → components.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Tokens
+   -------------------------------------------------------------------------- */
 :root {
-  --bg: #0b1220;
-  --bg-accent: #14213d;
-  --fg: #e7ecf3;
-  --muted: #93a1b5;
-  --accent: #4f8cff;
-  --maxw: 44rem;
+  /* Color — light defaults; dark overrides in the media query below.
+     Referenced by role only (--fg/--bg/…), never by raw value. */
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #6a6a6a;
+  --border: rgba(0, 0, 0, 0.12);
+
+  /* Type — system stacks only, no web fonts */
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    monospace;
+  --text-hero: clamp(2.5rem, 8vw, 4rem);
+  --text-h2: 1.4rem;
+  --text-lg: 1.2rem;
+  --text-base: 1rem;
+  --text-sm: 0.9rem;
+
+  /* Spacing scale */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-6: 3rem;
+  --space-8: 5rem;
+
+  /* Primitives */
+  --radius: 0.5rem;
+  --radius-sm: 0.25rem;
+  --measure: 44rem; /* prose reading column (~70–80ch) */
+  --measure-wide: 60rem; /* opt-in wide content */
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0a0a0a;
+    --fg: #f2f2f2;
+    --muted: #9a9a9a;
+    --border: rgba(255, 255, 255, 0.14);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
 * {
   box-sizing: border-box;
 }
@@ -20,65 +63,411 @@ html {
 body {
   margin: 0;
   font-family: var(--font);
+  font-size: var(--text-base);
   line-height: 1.65;
   color: var(--fg);
-  background: linear-gradient(160deg, var(--bg) 0%, var(--bg-accent) 100%);
-  background-attachment: fixed;
+  background: var(--bg); /* flat — no gradient */
   min-height: 100vh;
 }
 
-.hero {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: 5rem 1.5rem 2rem;
+/* Reading column — header, main, footer, and any .container share the measure */
+.container,
+.site-header,
+main,
+.site-footer {
+  max-width: var(--measure);
+  margin-inline: auto;
 }
 
-.hero h1 {
-  font-size: clamp(2.5rem, 8vw, 4rem);
-  margin: 0 0 0.5rem;
-  letter-spacing: -0.02em;
+/* Opt-in wide variant for demos / media / code output */
+.container--wide {
+  max-width: var(--measure-wide);
 }
 
-.tagline {
-  font-size: 1.2rem;
-  color: var(--muted);
-  margin: 0;
-}
-
-main {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: 1rem 1.5rem 4rem;
-}
-
-section {
-  padding: 1.5rem 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+h1,
+h2,
+h3 {
+  line-height: 1.2;
 }
 
 h2 {
-  font-size: 1.4rem;
+  font-size: var(--text-h2);
   margin: 0 0 0.75rem;
 }
 
+h3 {
+  font-size: var(--text-lg);
+  margin: 0 0 var(--space-1);
+}
+
+p {
+  margin: 0 0 var(--space-2);
+}
+
+/* --------------------------------------------------------------------------
+   Utilities
+   -------------------------------------------------------------------------- */
 .muted {
   color: var(--muted);
 }
 
-a {
-  color: var(--accent);
+/* Skip-to-content — visually hidden until focused */
+.skip-link {
+  position: absolute;
+  left: var(--space-3);
+  top: -4rem;
+  z-index: 10;
+  padding: var(--space-1) var(--space-2);
+  color: var(--bg);
+  background: var(--fg);
+  border-radius: var(--radius-sm);
   text-decoration: none;
+  transition: top 150ms ease;
+}
+
+.skip-link:focus {
+  top: var(--space-3);
+}
+
+/* --------------------------------------------------------------------------
+   Link
+   -------------------------------------------------------------------------- */
+a {
+  color: var(--fg); /* monochrome — same as body text */
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-thickness 150ms ease;
 }
 
 a:hover {
+  text-decoration-thickness: 2px; /* emphasis via weight of the line, not hue */
+}
+
+/* Visible focus for every interactive element */
+a:focus-visible,
+button:focus-visible,
+.btn:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* --------------------------------------------------------------------------
+   Code
+   -------------------------------------------------------------------------- */
+code,
+pre {
+  font-family: var(--font-mono);
+  font-size: 0.95em;
+}
+
+/* Inline code — subtle hairline chip */
+:not(pre) > code {
+  padding: 0.1rem 0.35rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+/* Code block */
+pre {
+  margin: var(--space-3) 0;
+  padding: var(--space-2);
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  line-height: 1.5;
+}
+
+pre code {
+  padding: 0;
+  border: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Header + Nav
+   -------------------------------------------------------------------------- */
+.site-header {
+  padding: var(--space-4) var(--space-3) 0;
+}
+
+.nav__list {
+  display: flex;
+  flex-wrap: wrap; /* collapses gracefully — wraps on narrow screens, no JS */
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px; /* comfortable touch target */
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.nav__link:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+
+.nav__link--active,
+.nav__link[aria-current="page"] {
+  font-weight: 700;
   text-decoration: underline;
 }
 
-footer {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: 2rem 1.5rem 3rem;
+/* --------------------------------------------------------------------------
+   Hero
+   -------------------------------------------------------------------------- */
+.hero {
+  /* horizontal padding comes from .site-header; pad vertically only so the
+     title lines up with the nav above it */
+  padding: var(--space-6) 0 var(--space-4);
+}
+
+.hero__title {
+  margin: 0 0 var(--space-1);
+  font-size: var(--text-hero);
+  letter-spacing: -0.02em; /* tight tracking on large display text only */
+}
+
+.hero__tagline {
+  margin: 0;
+  font-size: var(--text-lg);
   color: var(--muted);
-  font-size: 0.9rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* --------------------------------------------------------------------------
+   Main + Section
+   -------------------------------------------------------------------------- */
+main {
+  padding: var(--space-2) var(--space-3) var(--space-6);
+}
+
+section {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border); /* hairline divider, not a box */
+}
+
+/* --------------------------------------------------------------------------
+   Button
+   -------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: var(--space-1) var(--space-3);
+  font: inherit;
+  color: var(--bg);
+  background: var(--fg);
+  border: 1px solid var(--fg);
+  border-radius: var(--radius);
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 150ms ease, background 150ms ease, color 150ms ease;
+}
+
+.btn:hover {
+  opacity: 0.85;
+}
+
+.btn--outline {
+  color: var(--fg);
+  background: transparent;
+}
+
+.btn--outline:hover {
+  color: var(--bg);
+  background: var(--fg);
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Card
+   -------------------------------------------------------------------------- */
+.card {
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.card__title {
+  margin: 0 0 var(--space-1);
+  font-size: var(--text-lg);
+}
+
+.card__body {
+  margin: 0 0 var(--space-3);
+}
+
+.card__body:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive card grid — one column on mobile, two once there's room */
+.cards {
+  display: grid;
+  gap: var(--space-3);
+}
+
+@media (min-width: 40rem) {
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Tag / badge
+   -------------------------------------------------------------------------- */
+.tag {
+  display: inline-block;
+  padding: 0.15rem var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* --------------------------------------------------------------------------
+   Form
+   -------------------------------------------------------------------------- */
+.form__field {
+  margin-bottom: var(--space-3);
+}
+
+.form__label {
+  display: block;
+  margin-bottom: var(--space-1);
+  font-weight: 700;
+}
+
+.form__input {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-1) var(--space-2);
+  font: inherit;
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+textarea.form__input {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+.form__help {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+/* Errors are conveyed as text + weight, never color alone (no accent to lean on) */
+.form__error {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   Post layout
+   -------------------------------------------------------------------------- */
+.post__header {
+  margin-bottom: var(--space-4);
+}
+
+.post__title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-hero);
+  letter-spacing: -0.02em;
+}
+
+.post__meta {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+/* Prose rhythm inside the article body */
+.post__body > * + * {
+  margin-top: var(--space-3);
+}
+
+.post__body h2 {
+  margin-top: var(--space-4);
+}
+
+.post__body ul,
+.post__body ol {
+  padding-left: var(--space-3);
+}
+
+.post__body li + li {
+  margin-top: var(--space-1);
+}
+
+.post__body blockquote {
+  margin: 0;
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--border);
+  color: var(--muted);
+}
+
+.post__body figure {
+  margin: 0;
+}
+
+.post__body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+}
+
+.post__body figcaption {
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+.site-footer {
+  padding: var(--space-4) var(--space-3) var(--space-6);
+  color: var(--muted);
+  font-size: var(--text-sm);
+  border-top: 1px solid var(--border);
+}
+
+/* --------------------------------------------------------------------------
+   Motion — respect reduced-motion
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }

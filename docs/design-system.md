@@ -100,8 +100,11 @@ correct markup is what makes the [accessibility](#accessibility) guarantees actu
   headings scale smoothly without breakpoint jumps.
 - **Breakpoints are rare and intentional.** We add one only when a component genuinely needs
   to reflow (e.g. a nav collapsing). No grid of arbitrary device widths.
-- _(proposed)_ Named breakpoints when we need them: `--bp-sm: 40rem`, `--bp-md: 60rem`.
-  Introduce lazily, not up front.
+- **First breakpoint in use:** `40rem`, where the `.cards` grid goes from one column to two.
+  It's a raw value in the media query (custom properties can't be used inside `@media`), so
+  there's no `--bp-sm` token — the number lives at the single call site that needs it.
+- _(proposed)_ Named breakpoints if a second call site ever wants the same number:
+  `--bp-md: 60rem`. Introduce lazily, not up front.
 
 ## Color
 
@@ -189,8 +192,8 @@ Other primitives:
 The component vocabulary — described here, coded in `styles.css`. Every page composes from
 this list; adding a genuinely new component means adding it here first.
 
-The **core set** (build now) is tokens + base + the components below marked _build now_.
-Everything else is added when a page needs it.
+The full vocabulary below is built — tokens + base + every component. New pages compose
+from this list; a genuinely new component gets added here first, then coded.
 
 | Component | What it is | Status |
 |---|---|---|
@@ -198,13 +201,13 @@ Everything else is added when a page needs it.
 | **Hero** | Page title + tagline block at top of a page | exists |
 | **Section** | A titled content block with a hairline top divider | exists |
 | **Muted text** | `.muted` for secondary/"coming soon" copy | exists |
-| **Button** | Solid (filled `--fg`) + outline variants; monochrome, no accent fill | build now |
-| **Nav** | Site navigation in the header; collapses gracefully on mobile | build now |
-| **Card** | A bordered container for a demo or linked item | build now |
-| **Form** | Inputs, textarea, select, labels, help/error text, submit button | build now |
-| **Post layout** | Article structure: title, date/meta, prose body, code blocks | build now |
-| **Tag / badge** | Small pill for post tags, statuses | later |
-| **Code block** | Styled `pre`/`code` for the dev blog | later |
+| **Button** | Solid (filled `--fg`) + outline variants; monochrome, no accent fill | exists |
+| **Nav** | Site navigation in the header; collapses gracefully on mobile | exists |
+| **Card** | A bordered container for a demo or linked item | exists |
+| **Form** | Inputs, textarea, select, labels, help/error text, submit button | exists |
+| **Post layout** | Article structure: title, date/meta, prose body, code blocks | exists |
+| **Tag / badge** | Small pill for post tags, statuses | exists |
+| **Code block** | Styled `pre`/`code` for the dev blog | exists |
 
 Buttons and forms are monochrome like everything else: emphasis via fill/outline/weight,
 never a color accent. Focus states are always visible for keyboard users.
@@ -276,8 +279,8 @@ None outstanding. The one remaining knob is cosmetic and easy to flip later:
 - **Links:** monochrome, underline-based emphasis (no colored links). _(2026-07-08)_
 - **Fonts:** system stack only — system UI font for text, system monospace for code, no web
   fonts. _(2026-07-08)_
-- **Build scope:** tokens + base + core components — button, nav, card, form, post layout —
-  built now. Tag/badge and code block come later. _(2026-07-08)_
+- **Build scope:** tokens + base + the full component set — button, nav, card, form, post
+  layout, tag/badge, and code block — all built. _(2026-07-08)_
 - **Wide content:** narrow prose column by default; opt-in `--wide` variant capped at
   `--measure-wide` for demos/media. _(2026-07-08)_
 - **Class naming:** BEM (`block__element--modifier`), with short utility classes for

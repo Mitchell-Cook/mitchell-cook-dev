@@ -8,12 +8,25 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <header class="hero">
-    <h1>Mitchell Cook</h1>
-    <p class="tagline">Building things, writing them down, and sharing what I learn.</p>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <header class="site-header">
+    <nav aria-label="Primary">
+      <ul class="nav__list">
+        <li><a class="nav__link" href="/" aria-current="page">Home</a></li>
+        <li><a class="nav__link" href="#writing">Writing</a></li>
+        <li><a class="nav__link" href="#ideas">Ideas</a></li>
+        <li><a class="nav__link" href="#demos">Demos</a></li>
+      </ul>
+    </nav>
+
+    <div class="hero">
+      <h1 class="hero__title">Mitchell Cook</h1>
+      <p class="hero__tagline">Building things, writing them down, and sharing what I learn.</p>
+    </div>
   </header>
 
-  <main>
+  <main id="main-content">
     <section id="about">
       <h2>About</h2>
       <p>
@@ -21,11 +34,41 @@
         blog, half-formed ideas, and small demos. It's intentionally simple for
         now and will grow as I figure out what I want it to be.
       </p>
+      <p>
+        <a class="btn" href="#demos">See the demos</a>
+        <a class="btn btn--outline" href="https://github.com/Mitchell-Cook">GitHub</a>
+      </p>
     </section>
 
     <section id="writing">
       <h2>Writing</h2>
-      <p class="muted">Posts are coming soon.</p>
+      <p class="muted">A few posts to start. More on the way.</p>
+      <ul class="cards" style="list-style: none; margin: 0; padding: 0;">
+        <li class="card">
+          <h3 class="card__title">
+            <a href="/post.html">Codifying a whole server in one repo</a>
+          </h3>
+          <p class="card__body muted">
+            How mitchellcook.dev deploys itself — one box, one domain,
+            edit-here-and-it-goes-live.
+          </p>
+          <ul class="tags">
+            <li class="tag">infra</li>
+            <li class="tag">devops</li>
+          </ul>
+        </li>
+        <li class="card">
+          <h3 class="card__title">Designing a system that stays boring</h3>
+          <p class="card__body muted">
+            Notes on a monochrome, system-font design system built to still
+            work in five years.
+          </p>
+          <ul class="tags">
+            <li class="tag">design</li>
+            <li class="tag">css</li>
+          </ul>
+        </li>
+      </ul>
     </section>
 
     <section id="ideas">
@@ -35,12 +78,54 @@
 
     <section id="demos">
       <h2>Demos</h2>
-      <p class="muted">Little experiments and projects. Coming soon.</p>
+      <p>Little experiments and projects.</p>
+      <div class="cards">
+        <div class="card">
+          <h3 class="card__title">Color contrast checker</h3>
+          <p class="card__body">A tiny tool for checking WCAG contrast ratios.</p>
+          <a class="btn" href="#">Open demo</a>
+        </div>
+        <div class="card">
+          <h3 class="card__title">Markdown scratchpad</h3>
+          <p class="card__body">Jot and preview Markdown, entirely in the browser.</p>
+          <a class="btn btn--outline" href="#">Open demo</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2>Say hello</h2>
+      <p class="muted">
+        Drop a note — I read everything, even if replies are slow.
+      </p>
+      <form class="form" action="#" method="post">
+        <div class="form__field">
+          <label class="form__label" for="name">Name</label>
+          <input class="form__input" id="name" name="name" type="text" autocomplete="name" />
+        </div>
+        <div class="form__field">
+          <label class="form__label" for="email">Email</label>
+          <input
+            class="form__input"
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            aria-describedby="email-help"
+          />
+          <p class="form__help" id="email-help">I'll only use this to reply.</p>
+        </div>
+        <div class="form__field">
+          <label class="form__label" for="message">Message</label>
+          <textarea class="form__input" id="message" name="message" rows="5"></textarea>
+        </div>
+        <button class="btn" type="submit">Send</button>
+      </form>
     </section>
   </main>
 
-  <footer>
-    <p>&copy; <span id="year">2026</span> Mitchell Cook &middot; <a href="https://github.com/Mitchell-Cook">GitHub</a></p>
+  <footer class="site-footer">
+    <p>&copy; 2026 Mitchell Cook &middot; <a href="https://github.com/Mitchell-Cook">GitHub</a></p>
   </footer>
 </body>
 </html>
